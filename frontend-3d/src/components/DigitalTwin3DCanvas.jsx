@@ -198,13 +198,14 @@ export default function DigitalTwin3DCanvas({
         if (intersects.length > 0) {
           const hit = intersects[0].object;
           hoverMeshRef.current = hit;
-          const dept = departmentsData.find((d) => d.department === hit.userData.deptName) || hit.userData.baseData;
+          const baseInfo = hit.userData.baseData || {};
+          const dept = departmentsData.find((d) => d.department === hit.userData.deptName) || baseInfo;
           setHoveredInfo({
-            name: hit.userData.deptName,
-            zone: hit.userData.baseData.zone,
-            population: hit.userData.baseData.population,
-            baseChe40: dept.base_che_40_pct || hit.userData.baseData.baseChe40,
-            simChe40: dept.sim_che_40_pct !== undefined ? dept.sim_che_40_pct : hit.userData.baseData.baseChe40,
+            name: hit.userData.deptName || 'Departamento',
+            zone: baseInfo.zone || 'Nacional',
+            population: baseInfo.population || 500000,
+            baseChe40: dept.base_che_40_pct || baseInfo.baseChe40 || 15.0,
+            simChe40: dept.sim_che_40_pct !== undefined ? dept.sim_che_40_pct : (baseInfo.baseChe40 || 15.0),
             reduction: dept.che_40_reduction_pts || 0,
             savings: dept.total_savings_soles || 0
           });
