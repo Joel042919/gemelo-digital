@@ -1,0 +1,34 @@
+# Python
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+motor-gemelo-digital/venv/
+motor-gemelo-digital/__pycache__/
+motor-gemelo-digital/src/__pycache__/
+
+# Node / Frontend
+node_modules/
+frontend-3d/node_modules/
+dist/
+frontend-3d/dist/
+.vite/
+frontend-3d/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment & IDE
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

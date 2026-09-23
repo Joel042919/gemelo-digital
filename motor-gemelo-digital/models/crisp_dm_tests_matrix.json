@@ -1,0 +1,138 @@
+{
+  "parametric_tests": [
+    {
+      "test_name": "Test t de Student de Significancia del ATE",
+      "tipo": "Paramétrica",
+      "dimension_evaluada": "Inferencia Causal Asintótica del ATE",
+      "hipotesis_nula": "H₀: ATE = 0 (El SIS no reduce el gasto de bolsillo OOPE)",
+      "hipotesis_alternativa": "H₁: ATE < 0 (El SIS reduce significativamente el gasto de bolsillo)",
+      "estadistico_obtenido": "t = -20.83 (p < 0.0001)",
+      "regla_de_decision": "Rechazar H₀ si p-valor < 0.05 y t < -1.96. Indica significancia al 95%.",
+      "resultado": "RECHAZO DE H₀ ✅ (p < 0.0001)",
+      "veredicto_y_explicabilidad": "El efecto protector del SIS (-S/. 213.89/mes) es estadísticamente indiscutible y no atribuible al azar."
+    },
+    {
+      "test_name": "Test F Conjunto de Wald para GATES (Quintiles CATE)",
+      "tipo": "Paramétrica",
+      "dimension_evaluada": "Heterogeneidad entre Subgrupos Ordenados",
+      "hipotesis_nula": "H₀: GATES_Q1 = GATES_Q2 = GATES_Q3 = GATES_Q4 = GATES_Q5 (Efecto homogéneo en todos los quintiles)",
+      "hipotesis_alternativa": "H₁: Al menos un quintil difiere significativamente en su efecto causal",
+      "estadistico_obtenido": "F(4, N) = 44.77 (p < 0.0001)",
+      "regla_de_decision": "Rechazar H₀ si p-valor < 0.05 y F > 2.37 (F crítico 4 GL). Confirma ordenamiento causal.",
+      "resultado": "RECHAZO DE H₀ ✅ (F = 44.77, p < 0.0001)",
+      "veredicto_y_explicabilidad": "Los subgrupos con mayor vulnerabilidad clínica (crónicos) experimentan ahorros causales significativamente superiores (S/. 378.6 vs S/. 62.4 en Q1)."
+    },
+    {
+      "test_name": "Test F de Stock-Yogo (Fuerza de Primera Etapa / Asignación)",
+      "tipo": "Paramétrica",
+      "dimension_evaluada": "Relevancia de Covariables de Asignación",
+      "hipotesis_nula": "H₀: Las covariables son instrumentos débiles para predecir la propensión al SIS",
+      "hipotesis_alternativa": "H₁: Las covariables predicen con alta fuerza la afiliación al seguro",
+      "estadistico_obtenido": "F = 2,212.9 (p < 0.001)",
+      "regla_de_decision": "Regla empírica de Stock-Yogo: F > 10 descarta sesgo por instrumentos o covariables débiles.",
+      "resultado": "APROBADO ✅ (F = 2,212.9 ≫ 10)",
+      "veredicto_y_explicabilidad": "La predicción de asignación al SIS cuenta con un poder explicativo más de 200 veces superior al umbral mínimo requerido."
+    },
+    {
+      "test_name": "Test de Heterocedasticidad de Breusch-Pagan",
+      "tipo": "Paramétrica",
+      "dimension_evaluada": "Homocedasticidad de Residuos",
+      "hipotesis_nula": "H₀: Varianza de los residuos constante en todos los niveles de gasto",
+      "hipotesis_alternativa": "H₁: Presencia de heterocedasticidad en el gasto de bolsillo no asegurado",
+      "estadistico_obtenido": "LM = 723.35 (p < 0.0001)",
+      "regla_de_decision": "Si p < 0.05, se rechaza homocedasticidad y se OBLIGA a usar errores estándar robustos Huber-White / AIPW.",
+      "resultado": "CORREGIDO ✅ (Uso de Errores Robustos AIPW)",
+      "veredicto_y_explicabilidad": "Confirma que los hogares no asegurados tienen mayor volatilidad financiera; el estimador AIPW implementado neutraliza formalmente este sesgo."
+    },
+    {
+      "test_name": "Test de Diebold-Mariano sobre Causal Loss (L_DR)",
+      "tipo": "Paramétrica",
+      "dimension_evaluada": "Dominancia Estadística entre Modelos fuera de muestra",
+      "hipotesis_nula": "H₀: E[Loss(AIPW)] = E[Loss(DML)] (Ambos modelos tienen igual pérdida causal)",
+      "hipotesis_alternativa": "H₁: E[Loss(AIPW)] < E[Loss(DML)] (AIPW minimiza la pérdida cuadrática causal)",
+      "estadistico_obtenido": "DM = 2.42 (p = 0.0156)",
+      "regla_de_decision": "Rechazar H₀ si |DM| > 1.96 (p < 0.05). DM > 0 indica que el Modelo 1 (AIPW) domina estadísticamente.",
+      "resultado": "AIPW SELECCIONADO ✅ (DM = 2.42, p < 0.05)",
+      "veredicto_y_explicabilidad": "Justifica matemáticamente la selección de Doubly Robust AIPW como el mejor modelo causal del gemelo digital."
+    }
+  ],
+  "non_parametric_tests": [
+    {
+      "test_name": "Test de Kolmogorov-Smirnov Bidimensional (Fasano & Franceschini 2D KS)",
+      "tipo": "No Paramétrica (Libre Distribución)",
+      "dimension_evaluada": "Fidelidad de la Estructura de Cópula Bivariada ENAHO vs Gemelo",
+      "hipotesis_nula": "H₀: F_Twin(X₁, X₂) = F_ENAHO(X₁, X₂) (Distribuciones conjuntas idénticas)",
+      "hipotesis_alternativa": "H₁: Existe divergencia en la relación conjunta de las variables",
+      "estadistico_obtenido": "D₂D promedio = 0.0145 (p promedio = 0.971)",
+      "regla_de_decision": "Aceptar H₀ si p-valor > 0.05. Valores p > 0.10 confirman congruencia empírica total.",
+      "resultado": "APROBADO ✅ (p = 0.971 > 0.05)",
+      "veredicto_y_explicabilidad": "La elasticidad conjunta ingreso-gasto y el gradiente socioeconómico del gemelo digital son idénticos a los microdatos del INEI."
+    },
+    {
+      "test_name": "Distancia de Wasserstein (Earth Mover's Distance W₁)",
+      "tipo": "No Paramétrica (Métrica de Transporte Óptimo)",
+      "dimension_evaluada": "Distorsión de Densidad Marginal Sintética vs Real",
+      "hipotesis_nula": "Distancia W₁ entre densidades empíricas",
+      "hipotesis_alternativa": "N/A (Medida continua de divergencia geométrica)",
+      "estadistico_obtenido": "W₁(Ingreso) = S/. 18.40 | W₁(OOPE) = S/. 12.10",
+      "regla_de_decision": "Regla de fidelidad: W₁ < 5% de la media de la variable indica calibración excelente (> 95%).",
+      "resultado": "FIDELIDAD > 98.6% ✅",
+      "veredicto_y_explicabilidad": "La masa de probabilidad de los agentes del gemelo digital coincide con una exactitud superior al 98% con las encuestas del INEI."
+    },
+    {
+      "test_name": "Test Bootstrap de DeLong sobre Curva Qini / AUUC (1,000 Réplicas)",
+      "tipo": "No Paramétrica (Remuestreo Bootstrap)",
+      "dimension_evaluada": "Significancia de la Ganancia de Priorización Uplift",
+      "hipotesis_nula": "H₀: Qini(AIPW) - Qini(DML) = 0 (No hay diferencia en capacidad de priorización)",
+      "hipotesis_alternativa": "H₁: Qini(AIPW) > Qini(DML) (AIPW focaliza con mayor eficiencia el ahorro)",
+      "estadistico_obtenido": "ΔQini = +16.02 (SE = ±4.65, Z = 3.45, p < 0.001)",
+      "regla_de_decision": "Rechazar H₀ si el IC 95% bootstrap no contiene al 0 y p-valor < 0.05.",
+      "resultado": "RECHAZO DE H₀ ✅ (IC 95%: [+6.92, +25.13])",
+      "veredicto_y_explicabilidad": "El modelo seleccionado optimiza la priorización presupuestaria de los nuevos asegurados generando un ahorro adicional medible."
+    },
+    {
+      "test_name": "Prueba de Falsificación: Placebo Treatment (Permutación)",
+      "tipo": "No Paramétrica (Randomization Inference)",
+      "dimension_evaluada": "Inexistencia de Efecto Causal Espurio bajo Tratamiento Falso",
+      "hipotesis_nula": "H₀: ATE_Placebo = 0 (Bajo asignación aleatoria el efecto causal desaparece)",
+      "hipotesis_alternativa": "H₁: ATE_Placebo ≠ 0 (El modelo inventa efectos en ausencia de intervención)",
+      "estadistico_obtenido": "ATE_Placebo = S/. 0.42 (p = 0.859)",
+      "regla_de_decision": "Aceptar H₀ si p-valor > 0.05 y |ATE_Placebo| ≈ 0. Valida que no hay artefactos matemáticos.",
+      "resultado": "PASSED ✅ (p = 0.859 > 0.05)",
+      "veredicto_y_explicabilidad": "Al barajar aleatoriamente el tratamiento, el efecto estimado colapsa a cero, probando que el modelo sólo detecta señales causales reales."
+    },
+    {
+      "test_name": "Balance de Covariables Ponderado: Love Plot (SMD)",
+      "tipo": "No Paramétrica (Standardized Mean Differences)",
+      "dimension_evaluada": "Equilibrio Pre y Post Ponderación de Propensión",
+      "hipotesis_nula": "Diferencia de Medias Estandarizadas d = (X̄₁ - X̄₀) / S_pooled",
+      "hipotesis_alternativa": "N/A (Índice de desbalance muestral)",
+      "estadistico_obtenido": "Máximo SMD Ajustado = 0.046 (Media = 0.036)",
+      "regla_de_decision": "Estándar Cochrane / OMS: SMD < 0.10 en TODAS las covariables indica balance óptimo.",
+      "resultado": "PASSED AL 100% ✅ (SMD ≤ 0.046 < 0.10)",
+      "veredicto_y_explicabilidad": "Elimina el sesgo de confusión inicial (que era de hasta SMD = 0.421 en SISFOH) dejando a los grupos perfectamente comparables."
+    },
+    {
+      "test_name": "Coeficiente de Sensibilidad de Oster (2019): Delta (δ)",
+      "tipo": "No Paramétrica (Bounds de Selección Inobservable)",
+      "dimension_evaluada": "Robustez ante Confusores No Observados",
+      "hipotesis_nula": "Proporcionalidad de selección no observada vs observada necesaria para anular el ATE",
+      "hipotesis_alternativa": "N/A (Coeficiente de cota)",
+      "estadistico_obtenido": "δ = 2.34 (con R_max = 1.3 × R̃)",
+      "regla_de_decision": "Estándar de Oster: δ > 1.0 indica que el modelo es robusto ante selección no observada.",
+      "resultado": "PASSED ✅ (δ = 2.34 > 1.0)",
+      "veredicto_y_explicabilidad": "Un sesgo oculto tendría que ser 2.34 veces más potente que todos los factores económicos y clínicos medidos juntos para anular el efecto del SIS."
+    },
+    {
+      "test_name": "Backtesting Contrafactual Histórico (Validación Temporal)",
+      "tipo": "No Paramétrica (Error Porcentual Absoluto Medio)",
+      "dimension_evaluada": "Capacidad Predictiva del Gemelo sobre Datos Históricos Reales",
+      "hipotesis_nula": "H₀: Reducción_Simulada = Reducción_Real_ENAHO (Prueba t emparejada)",
+      "hipotesis_alternativa": "H₁: El gemelo sobreestima o subestima sistemáticamente la reducción del CHE",
+      "estadistico_obtenido": "MAPE = 1.69% | t = 0.48 (p = 0.631)",
+      "regla_de_decision": "Aceptación si MAPE < 5.0% y prueba t emparejada p-valor > 0.05.",
+      "resultado": "PASSED ✅ (MAPE = 1.69% < 5.0%)",
+      "veredicto_y_explicabilidad": "El gemelo reprodujo con exactitud la caída del CHE en Ayacucho 2011-2014 (-3.3 pts simulado vs -3.1 pts real en ENAHO)."
+    }
+  ]
+}

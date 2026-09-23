@@ -1,0 +1,79 @@
+{
+  "goodness_of_fit": {
+    "r2_treated": 0.441,
+    "r2_control": 0.254,
+    "rmse_treated": 73.32,
+    "rmse_control": 196.97,
+    "mae_treated": 44.71,
+    "mae_control": 120.05,
+    "auc_roc_propensity": 0.7351,
+    "brier_score_propensity": 0.1926,
+    "pct_common_support_strict": 99.7,
+    "ks_test_overlap_pvalue": 0.0
+  },
+  "causal_inference": {
+    "ate_soles": -70.55,
+    "ate_se": 3.39,
+    "z_statistic": -20.83,
+    "p_value_formatted": "< 0.0001 (Altamente Significativo)",
+    "ci_90": [
+      -76.13,
+      -64.98
+    ],
+    "ci_95": [
+      -77.19,
+      -63.92
+    ],
+    "ci_99": [
+      -79.28,
+      -61.83
+    ],
+    "first_stage_f_stat": 2212.9,
+    "first_stage_f_pval": "< 0.001"
+  },
+  "rubin_balance_criteria": {
+    "rubin_b_statistic": 0.824,
+    "rubin_b_threshold": "< 0.25 (Criterio Rubin)",
+    "rubin_b_passed": false,
+    "rubin_r_variance_ratio": 0.745,
+    "rubin_r_threshold": "0.5 - 2.0 (Ideal: 0.8 - 1.25)",
+    "rubin_r_passed": true
+  },
+  "refutation_tests": {
+    "placebo_treatment": {
+      "test_name": "Tratamiento Falso Aleatorizado (Placebo Treatment)",
+      "estimated_ate": 0.42,
+      "p_value": 0.859,
+      "expected_result": "ATE ≈ 0 y p-value > 0.05",
+      "status": "PASSED ✅"
+    },
+    "negative_control_outcome": {
+      "test_name": "Resultado de Control Negativo (Placebo Outcome)",
+      "estimated_ate": -0.0,
+      "p_value": 0.615,
+      "expected_result": "Efecto causal nulo en variable no afectada",
+      "status": "PASSED ✅"
+    },
+    "subset_jackknife_stability": {
+      "test_name": "Estabilidad en Submuestras (Jackknife 80%)",
+      "mean_subset_ate": -70.73,
+      "std_subset_ate": 1.76,
+      "stability_score_pct": 97.5,
+      "status": "PASSED ✅"
+    },
+    "unobserved_confounder_rv": {
+      "test_name": "Valor de Robustez ante Confusor No Observado (Cinelli-Hazlett RV)",
+      "robustness_value_pct": 16.8,
+      "interpretation": "Un confusor no medido debe explicar más del 16.8% de la varianza residual para anular el efecto.",
+      "status": "WARNING ⚠️"
+    }
+  },
+  "residual_diagnostics": {
+    "jarque_bera_stat": 264815.65,
+    "jarque_bera_pval": 0.0,
+    "durbin_watson_stat": 1.979,
+    "durbin_watson_interpretation": "1.98 ≈ 2.0 (Ausencia de autocorrelación)",
+    "breusch_pagan_lm": 723.35,
+    "breusch_pagan_pval": 0.0
+  }
+}

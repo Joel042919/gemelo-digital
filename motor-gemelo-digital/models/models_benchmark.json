@@ -1,0 +1,96 @@
+{
+  "best_model_name": "Doubly Robust (IPW + Ridge AIPW)",
+  "feature_cols": [
+    "is_rural",
+    "household_size",
+    "has_children_u5",
+    "num_children_u5",
+    "has_elderly",
+    "num_elderly",
+    "dependency_ratio",
+    "is_female_head",
+    "sisfoh_poverty_score",
+    "monthly_total_exp",
+    "monthly_income",
+    "subsistence_food_exp",
+    "capacity_to_pay",
+    "has_chronic_disease",
+    "chronic_disease_count",
+    "has_acute_illness_4w",
+    "had_hospitalization"
+  ],
+  "models_benchmark": [
+    {
+      "model_name": "Doubly Robust (IPW + Ridge AIPW)",
+      "parameters": {
+        "ps_c": 5.0,
+        "reg_alpha": 0.1
+      },
+      "ate_soles": -213.89,
+      "ate_se": 2.75,
+      "ate_ci_95": [
+        -219.28,
+        -208.51
+      ],
+      "cate_std_heterogeneity": 147.78,
+      "qini_uplift_score": 382.69,
+      "mean_smd_balance": 0.176,
+      "subgroup_effects": {
+        "pobre_extremo_o_no_extremo": -197.54,
+        "no_pobre": -251.99,
+        "con_enfermedad_cronica": -310.66,
+        "sin_enfermedad_cronica": -139.86,
+        "area_rural": -178.98
+      }
+    },
+    {
+      "model_name": "Double Machine Learning (DML - LightGBM)",
+      "parameters": {
+        "n_estimators": 120,
+        "max_depth": 5,
+        "learning_rate": 0.08,
+        "n_splits": 5
+      },
+      "ate_soles": -213.03,
+      "ate_se": 3.11,
+      "ate_ci_95": [
+        -219.12,
+        -206.93
+      ],
+      "cate_std_heterogeneity": 167.28,
+      "qini_uplift_score": 366.63,
+      "mean_smd_balance": 0.176,
+      "subgroup_effects": {
+        "pobre_extremo_o_no_extremo": -196.18,
+        "no_pobre": -252.27,
+        "con_enfermedad_cronica": -300.97,
+        "sin_enfermedad_cronica": -145.74,
+        "area_rural": -183.14
+      }
+    },
+    {
+      "model_name": "X-Learner (Gradient Boosting Meta-Learner)",
+      "parameters": {
+        "n_estimators": 120,
+        "max_depth": 5,
+        "learning_rate": 0.08
+      },
+      "ate_soles": -216.12,
+      "ate_se": 2.94,
+      "ate_ci_95": [
+        -221.89,
+        -210.36
+      ],
+      "cate_std_heterogeneity": 158.29,
+      "qini_uplift_score": 372.37,
+      "mean_smd_balance": 0.176,
+      "subgroup_effects": {
+        "pobre_extremo_o_no_extremo": -201.0,
+        "no_pobre": -251.36,
+        "con_enfermedad_cronica": -310.94,
+        "sin_enfermedad_cronica": -143.58,
+        "area_rural": -187.61
+      }
+    }
+  ]
+}

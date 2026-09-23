@@ -1,0 +1,117 @@
+{
+  "random_forest": {
+    "algoritmo": "random_forest",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "auc_roc": 1.0,
+    "auc_pr": 1.0,
+    "tiempo_entrenamiento_s": 0.13,
+    "tiempo_inferencia_ms": 0.7455,
+    "matriz_confusion": [
+      [
+        34,
+        0
+      ],
+      [
+        0,
+        12
+      ]
+    ],
+    "interpretabilidad": 8,
+    "mantenibilidad": 9
+  },
+  "xgboost": {
+    "algoritmo": "xgboost",
+    "accuracy": 0.9565,
+    "precision": 0.9627,
+    "recall": 0.9565,
+    "f1_score": 0.9575,
+    "auc_roc": 1.0,
+    "auc_pr": 1.0,
+    "tiempo_entrenamiento_s": 0.09,
+    "tiempo_inferencia_ms": 0.0293,
+    "matriz_confusion": [
+      [
+        32,
+        2
+      ],
+      [
+        0,
+        12
+      ]
+    ],
+    "interpretabilidad": 7,
+    "mantenibilidad": 8
+  },
+  "svm": {
+    "algoritmo": "svm",
+    "accuracy": 0.7826,
+    "precision": 0.7725,
+    "recall": 0.7826,
+    "f1_score": 0.7758,
+    "auc_roc": 0.8775,
+    "auc_pr": 0.744,
+    "tiempo_entrenamiento_s": 0.01,
+    "tiempo_inferencia_ms": 0.0304,
+    "matriz_confusion": [
+      [
+        30,
+        4
+      ],
+      [
+        6,
+        6
+      ]
+    ],
+    "interpretabilidad": 4,
+    "mantenibilidad": 6
+  },
+  "cnn_lstm": {
+    "algoritmo": "cnn_lstm",
+    "accuracy": 0.8261,
+    "precision": 0.6824,
+    "recall": 0.8261,
+    "f1_score": 0.7474,
+    "auc_roc": 0.3684,
+    "auc_pr": 0.1956,
+    "tiempo_entrenamiento_s": 4.38,
+    "tiempo_inferencia_ms": 17.1005,
+    "matriz_confusion": [
+      [
+        19,
+        0
+      ],
+      [
+        4,
+        0
+      ]
+    ],
+    "interpretabilidad": 2,
+    "mantenibilidad": 3
+  },
+  "lstm_ae_rf": {
+    "algoritmo": "lstm_ae_rf",
+    "accuracy": 0.8261,
+    "precision": 0.6824,
+    "recall": 0.8261,
+    "f1_score": 0.7474,
+    "auc_roc": 0.6184,
+    "auc_pr": 0.5969,
+    "tiempo_entrenamiento_s": 5.21,
+    "tiempo_inferencia_ms": 3.272,
+    "matriz_confusion": [
+      [
+        19,
+        0
+      ],
+      [
+        4,
+        0
+      ]
+    ],
+    "interpretabilidad": 5,
+    "mantenibilidad": 4
+  }
+}

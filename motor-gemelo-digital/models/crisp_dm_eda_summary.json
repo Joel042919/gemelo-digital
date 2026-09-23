@@ -1,0 +1,228 @@
+{
+  "descriptive_statistics": [
+    {
+      "Variable": "monthly_income",
+      "Media": 1965.18,
+      "Mediana": 1555.95,
+      "Desv. Est. (Std)": 1551.31,
+      "Mínimo": 90.8,
+      "Máximo": 18403.84,
+      "Rango Intercuartil (IQR)": 1570.94,
+      "Asimetría (Skewness)": 2.446,
+      "Curtosis (Kurtosis)": 10.704
+    },
+    {
+      "Variable": "monthly_total_exp",
+      "Media": 1813.0,
+      "Mediana": 1482.64,
+      "Desv. Est. (Std)": 1310.79,
+      "Mínimo": 99.84,
+      "Máximo": 16550.22,
+      "Rango Intercuartil (IQR)": 1415.19,
+      "Asimetría (Skewness)": 2.106,
+      "Curtosis (Kurtosis)": 8.109
+    },
+    {
+      "Variable": "subsistence_food_exp",
+      "Media": 699.01,
+      "Mediana": 714.5,
+      "Desv. Est. (Std)": 276.06,
+      "Mínimo": 71.69,
+      "Máximo": 4137.55,
+      "Rango Intercuartil (IQR)": 346.01,
+      "Asimetría (Skewness)": 1.538,
+      "Curtosis (Kurtosis)": 9.335
+    },
+    {
+      "Variable": "capacity_to_pay",
+      "Media": 1113.99,
+      "Mediana": 768.89,
+      "Desv. Est. (Std)": 1054.91,
+      "Mínimo": 28.15,
+      "Máximo": 12412.66,
+      "Rango Intercuartil (IQR)": 1059.82,
+      "Asimetría (Skewness)": 2.156,
+      "Curtosis (Kurtosis)": 7.303
+    },
+    {
+      "Variable": "oope_total",
+      "Media": 125.23,
+      "Mediana": 77.11,
+      "Desv. Est. (Std)": 158.57,
+      "Mínimo": 5.0,
+      "Máximo": 3200.31,
+      "Rango Intercuartil (IQR)": 108.15,
+      "Asimetría (Skewness)": 4.737,
+      "Curtosis (Kurtosis)": 39.338
+    },
+    {
+      "Variable": "sisfoh_poverty_score",
+      "Media": 59.63,
+      "Mediana": 62.5,
+      "Desv. Est. (Std)": 21.94,
+      "Mínimo": 1.0,
+      "Máximo": 99.0,
+      "Rango Intercuartil (IQR)": 32.9,
+      "Asimetría (Skewness)": -0.439,
+      "Curtosis (Kurtosis)": -0.594
+    },
+    {
+      "Variable": "household_size",
+      "Media": 4.81,
+      "Mediana": 4.0,
+      "Desv. Est. (Std)": 2.38,
+      "Mínimo": 1.0,
+      "Máximo": 9.0,
+      "Rango Intercuartil (IQR)": 4.0,
+      "Asimetría (Skewness)": 0.312,
+      "Curtosis (Kurtosis)": -0.949
+    },
+    {
+      "Variable": "dependency_ratio",
+      "Media": 0.41,
+      "Mediana": 0.12,
+      "Desv. Est. (Std)": 0.69,
+      "Mínimo": 0.0,
+      "Máximo": 5.0,
+      "Rango Intercuartil (IQR)": 0.5,
+      "Asimetría (Skewness)": 2.58,
+      "Curtosis (Kurtosis)": 7.446
+    },
+    {
+      "Variable": "chronic_disease_count",
+      "Media": 0.6,
+      "Mediana": 0.0,
+      "Desv. Est. (Std)": 0.8,
+      "Mínimo": 0.0,
+      "Máximo": 3.0,
+      "Rango Intercuartil (IQR)": 1.0,
+      "Asimetría (Skewness)": 1.236,
+      "Curtosis (Kurtosis)": 0.888
+    }
+  ],
+  "correlation_analysis": [
+    {
+      "Variable": "monthly_income",
+      "Pearson r": 0.141,
+      "Pearson p-valor": "< 0.001",
+      "Spearman rho": 0.179,
+      "Spearman p-valor": "< 0.001",
+      "Interpretación": "Correlación débil-moderada"
+    },
+    {
+      "Variable": "monthly_total_exp",
+      "Pearson r": 0.152,
+      "Pearson p-valor": "< 0.001",
+      "Spearman rho": 0.187,
+      "Spearman p-valor": "< 0.001",
+      "Interpretación": "Correlación débil-moderada"
+    },
+    {
+      "Variable": "subsistence_food_exp",
+      "Pearson r": 0.146,
+      "Pearson p-valor": "< 0.001",
+      "Spearman rho": 0.177,
+      "Spearman p-valor": "< 0.001",
+      "Interpretación": "Correlación débil-moderada"
+    },
+    {
+      "Variable": "capacity_to_pay",
+      "Pearson r": 0.151,
+      "Pearson p-valor": "< 0.001",
+      "Spearman rho": 0.189,
+      "Spearman p-valor": "< 0.001",
+      "Interpretación": "Correlación débil-moderada"
+    },
+    {
+      "Variable": "sisfoh_poverty_score",
+      "Pearson r": 0.017,
+      "Pearson p-valor": "0.0423",
+      "Spearman rho": 0.024,
+      "Spearman p-valor": "0.0030",
+      "Interpretación": "Correlación débil-moderada"
+    },
+    {
+      "Variable": "household_size",
+      "Pearson r": 0.002,
+      "Pearson p-valor": "0.8034",
+      "Spearman rho": 0.017,
+      "Spearman p-valor": "0.0351",
+      "Interpretación": "Correlación débil-moderada"
+    },
+    {
+      "Variable": "dependency_ratio",
+      "Pearson r": 0.136,
+      "Pearson p-valor": "< 0.001",
+      "Spearman rho": 0.275,
+      "Spearman p-valor": "< 0.001",
+      "Interpretación": "Correlación débil-moderada"
+    },
+    {
+      "Variable": "chronic_disease_count",
+      "Pearson r": 0.315,
+      "Pearson p-valor": "< 0.001",
+      "Spearman rho": 0.457,
+      "Spearman p-valor": "< 0.001",
+      "Interpretación": "Correlación directa moderada-alta"
+    }
+  ],
+  "quintile_eda": [
+    {
+      "income_quintile": "Q1 (Más Pobre)",
+      "n_households": 3000,
+      "mean_income": 792.78,
+      "mean_oope": 100.58,
+      "mean_capacity": 306.4,
+      "che_40_pct": 33.07,
+      "che_10_pct": 48.9,
+      "impoverished_pct": 0.0,
+      "sis_coverage_pct": 84.0
+    },
+    {
+      "income_quintile": "Q2",
+      "n_households": 3000,
+      "mean_income": 1369.33,
+      "mean_oope": 111.61,
+      "mean_capacity": 649.09,
+      "che_40_pct": 15.17,
+      "che_10_pct": 32.13,
+      "impoverished_pct": 0.0,
+      "sis_coverage_pct": 83.23
+    },
+    {
+      "income_quintile": "Q3",
+      "n_households": 3000,
+      "mean_income": 1903.63,
+      "mean_oope": 122.57,
+      "mean_capacity": 1033.97,
+      "che_40_pct": 9.17,
+      "che_10_pct": 23.97,
+      "impoverished_pct": 5.93,
+      "sis_coverage_pct": 81.17
+    },
+    {
+      "income_quintile": "Q4",
+      "n_households": 3000,
+      "mean_income": 2440.54,
+      "mean_oope": 141.57,
+      "mean_capacity": 1449.02,
+      "che_40_pct": 7.57,
+      "che_10_pct": 20.7,
+      "impoverished_pct": 13.87,
+      "sis_coverage_pct": 43.0
+    },
+    {
+      "income_quintile": "Q5 (Más Rico)",
+      "n_households": 3000,
+      "mean_income": 3319.6,
+      "mean_oope": 149.83,
+      "mean_capacity": 2131.46,
+      "che_40_pct": 3.97,
+      "che_10_pct": 15.83,
+      "impoverished_pct": 0.53,
+      "sis_coverage_pct": 40.53
+    }
+  ],
+  "total_sample_size": 15000,
+  "total_departments": 24
+}
