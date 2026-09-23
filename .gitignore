@@ -32,3 +32,7 @@ yarn-error.log*
 *.swo
 .DS_Store
 Thumbs.db
+
+# Large raw survey data
+motor-gemelo-digital/data/1031-Modulo01/
+motor-gemelo-digital/data/Enaho01-*.csv
