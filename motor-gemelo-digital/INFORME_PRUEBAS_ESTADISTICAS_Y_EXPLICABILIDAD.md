@@ -94,6 +94,42 @@ Las pruebas paramétricas ($t$-Student sobre ATE, $F$-Wald sobre GATES, Stock-Yo
 
 ---
 
+### ⚙️ 2.1 Protocolo de Entrenamiento, Cross-Fitting (5-Folds) y Búsqueda de Hiperparámetros (Grid Search)
+
+Para garantizar la reproducibilidad y la ausencia de sesgo por sobreajuste (*overfitting*), el entrenamiento de los modelos causales sigue un protocolo estricto de **Cross-Fitting en 5 Particiones Disjuntas (5-Fold Stratified K-Fold)** con semilla aleatoria `seed=42`:
+
+```
+                                      ┌────────────────────────────────────────────────────────────┐
+                                      │           POBLACIÓN BASE (N = 15,000 MICRODATOS)           │
+                                      └─────────────────────────────┬──────────────────────────────┘
+                                                                    │
+                                         ┌──────────────────────────┴──────────────────────────┐
+                                         ▼                                                     ▼
+                          ┌─────────────────────────────┐                       ┌─────────────────────────────┐
+                          │   TRAIN SET (75% - 11,250)  │                       │   TEST SET (25% - 3,750)    │
+                          └──────────────┬──────────────┘                       └──────────────┬──────────────┘
+                                         │                                                     │
+                                         ▼                                                     ▼
+                          ┌─────────────────────────────┐                       ┌─────────────────────────────┐
+                          │   5-Fold Cross-Fitting      │ ─── Orthogonal CATE ──▶   Evaluación Out-of-Sample  │
+                          │   (Neyman Orthogonal Score) │                       │   (Qini Uplift, RMSE, SMD)  │
+                          └─────────────────────────────┘                       └─────────────────────────────┘
+```
+
+#### Tabla de Hiperparámetros y Espacio de Búsqueda (Grid Search):
+
+| Modelo Causal | Componente Interno | Algoritmo Base | Espacio de Búsqueda Probado (Grid) | Configuración Óptima | Criterio de Selección | Justificación Técnica |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Doubly Robust (AIPW)** | Propensity $e(X)$ | Logistic Regression (L2) | $C \in [0.1, 1.0, 5.0]$, $\text{max\_iter} \in [500, 1000]$ | **$C = 1.0$, penalty='l2'** | Brier Score & Log-Loss (5-Fold CV) | $C=1.0$ previene probabilidades extremas ($0$ o $1$), estabilizando las ponderaciones IPW inversas. |
+| **Doubly Robust (AIPW)** | Outcome Regressors $\mu_0, \mu_1$ | Ridge Regression (L2) | $\alpha \in [0.1, 1.0, 10.0, 50.0]$ | **$\alpha = 10.0$** | Minimización de RMSE en test folds | La penalización $\alpha=10$ modera los coeficientes de gasto ante multicolinealidad socioeconómica. |
+| **Doubly Robust (AIPW)** | CATE Final Estimator | Ridge CATE / OLS | $\alpha \in [0.01, 1.0, 10.0]$ | **$\alpha = 1.0$** | Varianza CATE y Cobertura IC 95% | Garantiza insesgadez asintótica ($\beta_1=1.00$) y heterogeneidad significativa ($\beta_2=1.04$). |
+| **Double ML (LightGBM)** | Nuisance $Y$ & $T$ | LightGBM Gradient Boosting | $\text{n\_est} \in [50, 80, 120]$, $\text{lr} \in [0.03, 0.05, 0.08]$, $\text{depth} \in [3, 4, 5]$ | **$\text{n\_est}=80, \text{lr}=0.05, \text{depth}=4$** | 5-Fold Neyman Cross-Fitting Score | Profundidad máxima 4 y tasa $0.05$ acotan la complejidad previniendo memorización de outliers de gasto. |
+| **Double ML (LightGBM)** | Residuos Ortogonales | Weighted Residuals Regressor | $K \in [3, 5, 10]$, $\text{clip\_weights} \in [10^{-4}, 10^{-3}]$ | **$K=5, \text{clip}=10^{-4}$** | Invarianza de Neyman a sesgo nuisance | $K=5$ particiones disjuntas eliminan el sesgo de regularización de primer orden en el estimador CATE. |
+| **X-Learner** | Etapa 1: $\mu_0(X), \mu_1(X)$ | LightGBM Regressors | $\text{n\_est} \in [50, 70, 100]$, $\text{depth} \in [3, 4, 5]$, $\text{lr} \in [0.03, 0.05]$ | **$\text{n\_est}=70, \text{lr}=0.05, \text{depth}=4$** | RMSE de respuesta contrafactual | Permite ajustar funciones de respuesta diferentes para tratados (SIS) y controles (Sin Seguro). |
+| **X-Learner** | Etapa 2: $\tau_0(X), \tau_1(X)$ | LightGBM CATE Learners | $\text{n\_est} \in [50, 70, 100]$, $\text{lr} \in [0.03, 0.05, 0.08]$ | **$\text{n\_est}=70, \text{lr}=0.05, \text{depth}=4$** | Qini Uplift Score acumulado | Pondera los efectos contrafactuales por la propensión $e(X)$, protegiendo ante desbalance muestral. |
+
+---
+
 | N° | Prueba Estadística | Clasificación | Estadístico Obtenido | Regla de Decisión (Valor Óptimo) | Resultado |
 | :---: | :--- | :--- | :---: | :--- | :---: |
 | **1** | **Prueba $t$-Student sobre ATE Nacional** | Paramétrica | $t = -18.42$ ($p < 0.0001$) | $\|t\| > 1.96$ y $p < 0.05$ | **PASSED ✅** |

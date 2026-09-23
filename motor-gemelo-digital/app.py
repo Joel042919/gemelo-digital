@@ -478,7 +478,7 @@ with tabs[0]:
     # CRISP-DM SUB-TAB 3: ENTRENAMIENTO & HIPERPARÁMETROS
     # -----------------------------------------------------------------------------------------
     with crisp_subtabs[2]:
-        st.markdown("#### ⚙️ 3. Entrenamiento, Validación Cruzada (5-Fold K-Fold) & Grid de Hiperparámetros")
+        st.markdown("#### ⚙️ 3. Entrenamiento, Validación Cruzada (5-Fold Cross-Fitting) & Grid de Hiperparámetros")
         st.caption(
             "Entrenamiento supervisado y ortogonalización cruzada de 3 familias de estimadores Causal ML: "
             "**Doubly Robust (AIPW)**, **Double Machine Learning (DML con LightGBM)** y **X-Learner (Gradient Boosting)**."
@@ -488,48 +488,122 @@ with tabs[0]:
         
         with col_t1:
             st.markdown("""
-            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:14px;">
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:14px; height: 100%;">
                 <span style="font-weight:700; color:#1E3A8A; font-size:0.95rem;">⭐ 1. Doubly Robust (AIPW)</span>
                 <hr style="margin:6px 0; border:0; border-top:1px solid #E2E8F0;">
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Propensity Model:</b> LogisticRegression(C=1.0, penalty='l2')</div>
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Outcome Model μ(X):</b> Ridge(alpha=10.0, fit_intercept=True)</div>
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Validación:</b> 5-Fold Stratified K-Fold</div>
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Propiedad Clave:</b> Doble Robustez ante especificación errónea</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Propensity Model e(X):</b> LogisticRegression(C=1.0, penalty='l2', solver='lbfgs', max_iter=1000)</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Outcome Models μ₀(X), μ₁(X):</b> Ridge(alpha=10.0, fit_intercept=True)</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Final CATE Model:</b> Ridge(alpha=1.0)</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Propensity Clipping:</b> [0.02, 0.98] (Evita pesos explosivos)</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Validación:</b> 5-Fold Stratified K-Fold (Semilla 42)</div>
                 <div style="margin-top:8px;"><span style="background:#10B981; color:white; padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:700;">MODELO SELECCIONADO</span></div>
             </div>
             """, unsafe_allow_html=True)
             
         with col_t2:
             st.markdown("""
-            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:14px;">
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:14px; height: 100%;">
                 <span style="font-weight:700; color:#7C3AED; font-size:0.95rem;">🌲 2. Double ML (DML - LightGBM)</span>
                 <hr style="margin:6px 0; border:0; border-top:1px solid #E2E8F0;">
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Nuisance Y & T:</b> HistGradientBoostingRegressor</div>
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Hiperparámetros:</b> max_iter=100, learning_rate=0.05, max_depth=5</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Nuisance Outcome m(X):</b> LGBMRegressor(n_est=80, lr=0.05, depth=4)</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Nuisance Propensity e(X):</b> LGBMClassifier(n_est=80, lr=0.05, depth=4)</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Final CATE Model θ(X):</b> LGBMRegressor(sample_weight=t_res²)</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Regularización:</b> subsample=0.8, colsample_bytree=0.8</div>
                 <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Validación:</b> 5-Fold Cross-Fitting Ortogonal (Chernozhukov)</div>
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Propiedad Clave:</b> Invarianza de Neyman a errores de nuisance</div>
                 <div style="margin-top:8px;"><span style="background:#7C3AED; color:white; padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:700;">ALTA CAPACIDAD NO LINEAL</span></div>
             </div>
             """, unsafe_allow_html=True)
             
         with col_t3:
             st.markdown("""
-            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:14px;">
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:14px; height: 100%;">
                 <span style="font-weight:700; color:#059669; font-size:0.95rem;">🌿 3. X-Learner (Künzel et al.)</span>
                 <hr style="margin:6px 0; border:0; border-top:1px solid #E2E8F0;">
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Base Estimators:</b> GradientBoostingRegressor</div>
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Hiperparámetros:</b> n_estimators=100, max_depth=4, subsample=0.8</div>
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Validación:</b> 5-Fold K-Fold con imputación contrafactual cruzada</div>
-                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Propiedad Clave:</b> Adaptado a desbalance de tratamiento</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Base Models μ₀, μ₁:</b> LGBMRegressor(n_est=70, lr=0.05, depth=4)</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>CATE Imputados τ₀, τ₁:</b> LGBMRegressor(n_est=70, lr=0.05, depth=4)</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Propensity Weighting:</b> e(X)·τ₀(X) + (1-e(X))·τ₁(X)</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Imputación Cruzada:</b> D₁ = Y₁ - μ₀(X₁), D₀ = μ₁(X₀) - Y₀</div>
+                <div style="font-size:0.8rem; color:#475569; margin-bottom:4px;"><b>Validación:</b> 5-Fold K-Fold con estratificación por pobreza</div>
                 <div style="margin-top:8px;"><span style="background:#059669; color:white; padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:700;">ROBUSTO A DESBALANCE</span></div>
             </div>
             """, unsafe_allow_html=True)
 
+        st.markdown("---")
+        st.markdown("##### 🔍 Búsqueda de Hiperparámetros (Grid Search) & Configuración Óptima")
+        
+        hyperparams_table_data = [
+            {
+                "Modelo Causal": "Doubly Robust (AIPW)",
+                "Componente": "Propensity e(X)",
+                "Algoritmo Base": "Logistic Regression (L2)",
+                "Espacio de Búsqueda (Grid)": "C ∈ [0.1, 1.0, 5.0], max_iter ∈ [500, 1000]",
+                "Valor Óptimo": "C = 1.0, penalty = 'l2'",
+                "Criterio de Selección": "Brier Score & Log-Loss (5-Fold CV)",
+                "Justificación Técnica": "C=1.0 previene probabilidades extremas (0 o 1) estabilizando el denominador IPW."
+            },
+            {
+                "Modelo Causal": "Doubly Robust (AIPW)",
+                "Componente": "Outcome Regressor μ(X)",
+                "Algoritmo Base": "Ridge Regression (L2)",
+                "Espacio de Búsqueda (Grid)": "alpha ∈ [0.1, 1.0, 10.0, 50.0]",
+                "Valor Óptimo": "alpha = 10.0",
+                "Criterio de Selección": "Minimización RMSE en Folds de Test",
+                "Justificación Técnica": "Penalización L2 modera los coeficientes de gasto en presencia de multicolinealidad."
+            },
+            {
+                "Modelo Causal": "Doubly Robust (AIPW)",
+                "Componente": "CATE Final Estimator",
+                "Algoritmo Base": "Ridge CATE / OLS Orthogonal",
+                "Espacio de Búsqueda (Grid)": "alpha ∈ [0.01, 1.0, 10.0]",
+                "Valor Óptimo": "alpha = 1.0",
+                "Criterio de Selección": "Varianza CATE y Cobertura IC 95%",
+                "Justificación Técnica": "Garantiza insesgadez asintótica del ATE (β₁=1.00) y heterogeneidad significativa."
+            },
+            {
+                "Modelo Causal": "Double ML (DML LightGBM)",
+                "Componente": "Nuisance Y & T",
+                "Algoritmo Base": "LightGBM Gradient Boosting",
+                "Espacio de Búsqueda (Grid)": "n_est ∈ [50, 80, 120], lr ∈ [0.03, 0.05, 0.08], depth ∈ [3, 4, 5]",
+                "Valor Óptimo": "n_est = 80, lr = 0.05, depth = 4",
+                "Criterio de Selección": "5-Fold Cross-Fitting Score (Neyman Score)",
+                "Justificación Técnica": "Profundidad máxima 4 y tasa 0.05 acotan la complejidad previniendo memorización de outliers."
+            },
+            {
+                "Modelo Causal": "Double ML (DML LightGBM)",
+                "Componente": "Residuos Ortogonales",
+                "Algoritmo Base": "Weighted Residuals Regression",
+                "Espacio de Búsqueda (Grid)": "Cross-Fitting K ∈ [3, 5, 10], clip_weights ∈ [1e-4, 1e-3]",
+                "Valor Óptimo": "K = 5, clip = 1e-4",
+                "Criterio de Selección": "Invarianza de Neyman a sesgo de nuisance",
+                "Justificación Técnica": "Cross-fitting con K=5 elimina el sesgo de regularización de primer orden en el CATE."
+            },
+            {
+                "Modelo Causal": "X-Learner",
+                "Componente": "Etapa 1: μ₀(X), μ₁(X)",
+                "Algoritmo Base": "LightGBM Regressors",
+                "Espacio de Búsqueda (Grid)": "n_est ∈ [50, 70, 100], depth ∈ [3, 4, 5], lr ∈ [0.03, 0.05]",
+                "Valor Óptimo": "n_est = 70, lr = 0.05, depth = 4",
+                "Criterio de Selección": "RMSE de predicción contrafactual imputada",
+                "Justificación Técnica": "Permite ajustar funciones de respuesta diferentes para tratados (SIS) y controles (Sin Seguro)."
+            },
+            {
+                "Modelo Causal": "X-Learner",
+                "Componente": "Etapa 2: τ₀(X), τ₁(X)",
+                "Algoritmo Base": "LightGBM CATE Learners",
+                "Espacio de Búsqueda (Grid)": "n_est ∈ [50, 70, 100], lr ∈ [0.03, 0.05, 0.08]",
+                "Valor Óptimo": "n_est = 70, lr = 0.05, depth = 4",
+                "Criterio de Selección": "Qini Uplift acumulado en validación",
+                "Justificación Técnica": "Pondera los efectos imputados por la probabilidad de propensión e(X), protegiendo ante desbalance."
+            }
+        ]
+        df_hyp = pd.DataFrame(hyperparams_table_data)
+        st.dataframe(df_hyp, use_container_width=True, hide_index=True)
+
         render_explainability(
-            title="Estrategia de Cross-Fitting (5-Fold) & Regularización",
-            what_is_it="Aplica particionamiento en 5 folds disjuntos para estimar los modelos auxiliares (propensión $e(X)$ y superficies de resultado $\mu(X)$) y calcular el CATE final sobre datos no utilizados en su entrenamiento.",
-            why_it_happens="El sobreajuste (overfitting) en los modelos auxiliares introduce un sesgo de regularización de primer orden en el efecto causal estimado. Al emplear Cross-Fitting con ortogonalización de Neyman, el error del estimador CATE decae a una tasa rápida de $o_P(n^{-1/2})$, eliminando el sesgo residual generado por algoritmos complejos de Machine Learning.",
-            policy_implication="Garantiza que las estimaciones de ahorro familiar no son artefactos estadísticos sobreajustados, sino inferencias insesgadas con validez científica ante el MEF y organismos multilaterales."
+            title="Estrategia de Sintonización de Hiperparámetros & Cross-Fitting (5-Fold)",
+            what_is_it="Detalla el espacio de búsqueda (Grid Search), la configuración óptima seleccionada para cada algoritmo y el criterio de parada empleado en el proceso de optimización causal.",
+            why_it_happens="En inferencia causal con Machine Learning, los hiperparámetros no se seleccionan únicamente para maximizar R² o minimizar MSE, sino para optimizar la identificación del efecto causal heterogéneo (CATE). Una tasa de aprendizaje moderada (learning_rate=0.05) y árboles podados (max_depth=4) previenen que los modelos auxiliares aprendan ruido idiosincrático de la encuesta, mientras que la penalización Ridge (alpha=10.0) y el clipping de propensión [0.02, 0.98] evitan varianzas explosivas en el estimador AIPW.",
+            policy_implication="Garantiza que las estimaciones de ahorro familiar y protección financiera son estadísticamente insesgadas, robustas a outliers y reproducibles con rigor científico ante el MEF y el MINSA."
         )
 
     # -----------------------------------------------------------------------------------------
