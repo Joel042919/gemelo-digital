@@ -407,25 +407,33 @@ def build_consolidated_pdf(
         styles["BodyCustom"]
     ))
 
-    if not df_quintiles.empty and "income_quintile" in df_quintiles.columns:
+    if not df_quintiles.empty:
+        q_col = "quintile" if "quintile" in df_quintiles.columns else ("income_quintile" if "income_quintile" in df_quintiles.columns else df_quintiles.columns[0])
         q_rows = [
             [
-                Paragraph("<b>Quintil de Ingreso</b>", styles["TableHeader"]),
+                Paragraph("<b>Quintil de Gasto</b>", styles["TableHeader"]),
                 Paragraph("<b>OOPE Antes</b>", styles["TableHeader"]),
                 Paragraph("<b>OOPE Después</b>", styles["TableHeader"]),
-                Paragraph("<b>Efecto CATE (Δ)</b>", styles["TableHeader"]),
+                Paragraph("<b>Ahorro Medio (S/.)</b>", styles["TableHeader"]),
                 Paragraph("<b>Reducción CHE 40%</b>", styles["TableHeader"]),
-                Paragraph("<b>Índice Pro-Pobreza</b>", styles["TableHeader"])
+                Paragraph("<b>Hogares Muestra</b>", styles["TableHeader"])
             ]
         ]
         for _, r in df_quintiles.iterrows():
+            q_name = str(r.get(q_col, ""))
+            oope_bef = float(r.get("avg_oope_before", r.get("mean_oope_before", 0.0)))
+            oope_aft = float(r.get("avg_oope_after", r.get("mean_oope_after", 0.0)))
+            savings = float(r.get("avg_savings_soles", abs(r.get("cate_mean", 0.0))))
+            che_red = float(r.get("che_40_reduction_pts", r.get("che_40_reduction_pp", 0.0)))
+            n_hog = int(r.get("n_households", 0))
+            
             q_rows.append([
-                Paragraph(f"<b>{r.get('income_quintile', '')}</b>", styles["TableCellBold"]),
-                Paragraph(f"S/. {r.get('mean_oope_before', 0):.2f}", styles["TableCellCenter"]),
-                Paragraph(f"S/. {r.get('mean_oope_after', 0):.2f}", styles["TableCellCenter"]),
-                Paragraph(f"<b>-S/. {abs(r.get('cate_mean', 0)):.2f}</b>", styles["TableCellCenter"]),
-                Paragraph(f"-{r.get('che_40_reduction_pp', 0):.2f} pp", styles["TableCellCenter"]),
-                Paragraph(f"{r.get('equity_ratio', 1.0):.2f}x", styles["TableCellCenter"])
+                Paragraph(f"<b>{q_name}</b>", styles["TableCellBold"]),
+                Paragraph(f"S/. {oope_bef:.2f}", styles["TableCellCenter"]),
+                Paragraph(f"S/. {oope_aft:.2f}", styles["TableCellCenter"]),
+                Paragraph(f"<b>-S/. {savings:.2f}</b>", styles["TableCellCenter"]),
+                Paragraph(f"-{che_red:.2f} pts", styles["TableCellCenter"]),
+                Paragraph(f"{n_hog:,} hog." if n_hog > 0 else "-", styles["TableCellCenter"])
             ])
         t_q = Table(q_rows, colWidths=[120, 75, 75, 80, 80, 74])
         t_q.setStyle(TableStyle([
@@ -657,25 +665,33 @@ def build_consolidated_pdf(
             styles["BodyCustom"]
         ))
         
-        dept_sorted = df_dept.sort_values(by="che_40_reduction_pp", ascending=False).head(6)
+        sort_col = "che_40_reduction_pts" if "che_40_reduction_pts" in df_dept.columns else ("che_40_reduction_pp" if "che_40_reduction_pp" in df_dept.columns else df_dept.columns[1])
+        dept_sorted = df_dept.sort_values(by=sort_col, ascending=False).head(6)
         dept_rows = [
             [
                 Paragraph("<b>Departamento</b>", styles["TableHeader"]),
-                Paragraph("<b>OOPE Antes</b>", styles["TableHeader"]),
-                Paragraph("<b>OOPE Después</b>", styles["TableHeader"]),
-                Paragraph("<b>CATE Ahorro (Δ)</b>", styles["TableHeader"]),
-                Paragraph("<b>Reducción CHE 40%</b>", styles["TableHeader"]),
-                Paragraph("<b>Hogares Protegidos</b>", styles["TableHeader"])
+                Paragraph("<b>Cobertura Sim.</b>", styles["TableHeader"]),
+                Paragraph("<b>CHE 40% Base</b>", styles["TableHeader"]),
+                Paragraph("<b>CHE 40% Sim.</b>", styles["TableHeader"]),
+                Paragraph("<b>Reducción CHE</b>", styles["TableHeader"]),
+                Paragraph("<b>Ahorro Regional</b>", styles["TableHeader"])
             ]
         ]
         for _, r in dept_sorted.iterrows():
+            dept_name = str(r.get("department", ""))
+            cov_sim = float(r.get("sim_coverage_pct", r.get("base_coverage_pct", 0.0)))
+            che_base = float(r.get("base_che_40_pct", 0.0))
+            che_sim = float(r.get("sim_che_40_pct", 0.0))
+            che_red = float(r.get("che_40_reduction_pts", r.get("che_40_reduction_pp", che_base - che_sim)))
+            tot_sav = float(r.get("total_savings_soles", 0.0))
+            
             dept_rows.append([
-                Paragraph(f"<b>{r.get('department', '')}</b>", styles["TableCellBold"]),
-                Paragraph(f"S/. {r.get('mean_oope_before', 0):.2f}", styles["TableCellCenter"]),
-                Paragraph(f"S/. {r.get('mean_oope_after', 0):.2f}", styles["TableCellCenter"]),
-                Paragraph(f"<b>-S/. {abs(r.get('cate_mean', 0)):.2f}</b>", styles["TableCellCenter"]),
-                Paragraph(f"-{r.get('che_40_reduction_pp', 0):.2f} pp", styles["TableCellCenter"]),
-                Paragraph(f"{r.get('protected_households', 0):,} hog.", styles["TableCellCenter"])
+                Paragraph(f"<b>{dept_name}</b>", styles["TableCellBold"]),
+                Paragraph(f"{cov_sim:.1f}%", styles["TableCellCenter"]),
+                Paragraph(f"{che_base:.2f}%", styles["TableCellCenter"]),
+                Paragraph(f"{che_sim:.2f}%", styles["TableCellCenter"]),
+                Paragraph(f"<b>-{che_red:.2f} pts</b>", styles["TableCellCenter"]),
+                Paragraph(f"S/. {tot_sav:,.2f}" if tot_sav > 0 else "-", styles["TableCellCenter"])
             ])
         t_dept = Table(dept_rows, colWidths=[120, 75, 75, 80, 80, 74])
         t_dept.setStyle(TableStyle([
