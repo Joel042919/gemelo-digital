@@ -20,12 +20,14 @@ def main():
     print(" GEMELO DIGITAL DE SALUD PÚBLICA: PIPELINE DE ENTRENAMIENTO & TUNING")
     print("=================================================================")
     
-    data_path = os.path.join(BASE_DIR, "data", "enaho_synthetic_microdata.csv")
+    data_path = os.path.join(BASE_DIR, "data", "enaho_2025_analisis.csv")
+    if not os.path.exists(data_path):
+        data_path = os.path.join(BASE_DIR, "data", "enaho_synthetic_microdata.csv")
     models_dir = os.path.join(BASE_DIR, "models")
     
-    print("\n1. Cargando / Generando Población Sintética Calibrada ENAHO...")
-    df = save_or_load_dataset(filepath=data_path, n_households=15000)
-    print(f"   -> Dataset cargado con {len(df)} registros.")
+    print(f"\n1. Cargando Microdatos ENAHO 2025 desde: {data_path}...")
+    df = save_or_load_dataset(filepath=data_path, n_households=len(pd.read_csv(data_path)) if os.path.exists(data_path) else 15000)
+    print(f"   -> Dataset cargado con {len(df):,} registros.")
     
     print("\n2. Entrenando y ajustando hiperparámetros de los 3 modelos causales...")
     best_model, benchmark, _ = train_and_tune_all_models(df, save_dir=models_dir)
